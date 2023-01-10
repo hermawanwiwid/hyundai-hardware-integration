@@ -2,11 +2,10 @@ const { BasicMessage } = require("../../schema");
 const { getPrinters, print } = require("pdf-to-printer");
 // const fs = require("fs");
 // const utils = require("util");
-const puppeteer = require("puppeteer");
-const hb = require("handlebars");
+// const puppeteer = require("puppeteer");
+// const hb = require("handlebars");
+// const { encode } = require("querystring");
 const fs = require("fs");
-const { encode } = require("querystring");
-
 const util = require("util");
 const { pipeline } = require("stream");
 const pump = util.promisify(pipeline);
@@ -16,17 +15,21 @@ module.exports = async (fastify, options) => {
     "/listprinter",
     {
       schema: {
-        description: "Health test",
+        description: "Get list printer from Windows OS",
         tags: ["Printer"],
-        summary: "test",
-        // response: {
-        //   200: { ...BasicMessage, description: "Successful response" },
-        //   500: { ...BasicMessage, description: "Failed response" },
-        // },
+        summary: "Get list printer from Windows OS",
+        response: {
+          200: {
+            type: "object",
+            properties: { message: { type: "array" } },
+            description: "Successful response",
+          },
+          500: { ...BasicMessage, description: "Failed response" },
+        },
       },
     },
     async (request, reply) => {
-      printers = await getPrinters();
+      const printers = await getPrinters();
 
       reply.send({
         message: printers,
@@ -37,9 +40,9 @@ module.exports = async (fastify, options) => {
     "/print",
     {
       schema: {
-        description: "Print",
+        description: "Print from Windows OS",
         tags: ["Printer"],
-        summary: "Print",
+        summary: "Print from Windows OS",
         //     consumes: ["multipart/form-data"],
         //     // body: {
         //     //   type: "object",
@@ -56,6 +59,7 @@ module.exports = async (fastify, options) => {
       },
     },
     async (request, reply) => {
+      // IF CONSUME HTML AS INPUT
       // console.log("Compiing the template with handlebars");
       // // const template = hb.compile(request.body.html, { strict: true });
       // const template = hb.compile(request.body.html, { strict: true });
@@ -63,7 +67,6 @@ module.exports = async (fastify, options) => {
       // const result = template(data);
       // // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
       // const html = result;
-
       // // we are using headless mode
       // const browser = await puppeteer.launch();
       // const page = await browser.newPage();
@@ -74,59 +77,48 @@ module.exports = async (fastify, options) => {
       // await browser.close();
       // console.log("PDF Generated");
 
-      printers = await getPrinters();
+      // const printers = await getPrinters();
       // const media = request.body.media;
       // const printer = request.body.printer_name;
-      const fileToPrint = "./testprint.png";
+      const fileToPrint = "./filetoprint.pdf";
       // const printer = "HP_DeskJet_2300_series";
       const parts = await request.file();
       const istermal = (await parts.fields.istermal?.value) === "true";
       let printer = "";
+
       if (Boolean(istermal)) {
         // printer = "HP_Ink_Tank_Wireless_410_series";
-        printer = printers[1].printer;
-        console.log(printer);
+        printer = process.env.TERMAL_PRINTER;
+        console.log("Printing to: ", printer);
       } else {
         // printer = "HP_DeskJet_2300_series";
-        printer = printers[0].printer;
+        printer = process.env.BASIC_PRINTER;
 
         let printer_name = await parts.fields.printer_name?.value;
         if (printer_name) {
           printer = printer_name;
         }
-        console.log(printer);
+        console.log("Printing to: ", printer);
       }
 
       // `LOGING`
-      console.log("PARTS==================");
+      // console.log("PARTS==================");
+      // console.log(parts.file);
       // console.log(await parts);
-      console.log("ISTERMAL==================");
-      console.log(istermal);
-      // console.log("==================BODYYY");
-      // console.log(request.body.printer_name);
-      // console.log(request.body.media);
-      // console.log(request.__files__);
+      // console.log("ISTERMAL==================");
+      // console.log(istermal);
 
-      // `LOOPING`
-      // for await (const part of parts) {
-      //   console.log("------------>no");
-      //   console.log(part.fields);
-      //   if (part.file) {
-      //     // upload and save the file
-      //     await pump(part.file, fs.createWriteStream(fileToPrint));
-      //   } else {
-      //     // do something with the non-files parts
-      //     console.log(";;;;;;;;;;;;;;;;;NOOOO FILES;;;;;;;;;;;;;;;;");
-      //   }
-      // }
-      // fs.writeFileSync(fileToPrint, media, {
-      //   encoding: null,
-      // });
-
-      // `UNIX PRINT`;
+      // `Windows PRINT`;
       // const options = ["-o landscape", "-o fit-to-page", "-o media=A4"];
       await pump(parts.file, fs.createWriteStream(fileToPrint));
-      print(fileToPrint, printer).then(console.log);
+      // printer = "HP_DeskJet_2300_series";
+      try {
+        await print(fileToPrint, printer).then(console.log);
+      } catch (error) {
+        // console.error();
+        console.log(error);
+      }
+      console.log("hello");
 
       reply.send({
         message: "Printing your file",
