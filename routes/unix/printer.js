@@ -15,9 +15,9 @@ module.exports = async (fastify, options) => {
     "/listprinter",
     {
       schema: {
-        description: "Get list printer from unix OS",
+        description: "Get list printer from Unix OS",
         tags: ["Printer"],
-        summary: "Get list printer from unix OS",
+        summary: "Get list printer from Unix OS",
         response: {
           200: {
             type: "object",
@@ -40,9 +40,9 @@ module.exports = async (fastify, options) => {
     "/print",
     {
       schema: {
-        description: "Print from unix OS",
+        description: "Print from Unix OS",
         tags: ["Printer"],
-        summary: "Print from unix OS",
+        summary: "Print from Unix OS",
         //     consumes: ["multipart/form-data"],
         //     // body: {
         //     //   type: "object",
