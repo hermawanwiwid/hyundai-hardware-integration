@@ -21,10 +21,7 @@
     "@fastify/swagger-ui": "^1.2.0",
     "env-schema": "^5.1.1",
     "fastify": "^4.10.2",
-    "formzilla": "^3.0.3",
-    "handlebars": "^4.7.7",
     "pdf-to-printer": "^5.4.0",
-    "puppeteer": "^19.4.1",
     "unix-print": "^1.2.0"
   },
   "nodemonConfig": {
