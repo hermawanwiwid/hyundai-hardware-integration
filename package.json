@@ -1,0 +1,37 @@
+{
+  "name": "fast",
+  "version": "1.0.0",
+  "description": "test desc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "author": "hermawan",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@fastify/autoload": "^5.4.1",
+    "@fastify/cors": "^8.2.0",
+    "@fastify/multipart": "^7.3.0",
+    "@fastify/swagger": "^8.1.0",
+    "@fastify/swagger-ui": "^1.2.0",
+    "env-schema": "^5.1.1",
+    "fastify": "^4.10.2",
+    "formzilla": "^3.0.3",
+    "handlebars": "^4.7.7",
+    "pdf-to-printer": "^5.4.0",
+    "puppeteer": "^19.4.1",
+    "unix-print": "^1.2.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "*/node_modules",
+      ".gitignore",
+      "package*.json"
+    ]
+  }
+}
