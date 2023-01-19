@@ -15,13 +15,6 @@ module.exports = {
       url: "https://swagger.io",
       description: "Find more info here",
     },
-    tags: [
-      {
-        name: "Auth",
-        description:
-          "Auth related endpoints, playground for token manipulation",
-      },
-    ],
     components: {
       securitySchemes: {
         Bearer: {
