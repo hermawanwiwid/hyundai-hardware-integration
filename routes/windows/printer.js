@@ -112,16 +112,21 @@ module.exports = async (fastify, options) => {
       // const options = ["-o landscape", "-o fit-to-page", "-o media=A4"];
       await pump(parts.file, fs.createWriteStream(fileToPrint));
       // printer = "HP_DeskJet_2300_series";
+      const options = {
+        printer: printer,
+        scale: "noscale",
+      };
       try {
-        await print(fileToPrint, printer).then(console.log);
+        console.log(options);
+        await print(fileToPrint, options).then(console.log);
       } catch (error) {
         // console.error();
         console.log(error);
       }
-      console.log("hello");
+      console.log("Printed successfully to: ", printer);
 
       reply.send({
-        message: "Printing your file",
+        message: `Printing your file to: ${printer}`,
       });
     }
   );
